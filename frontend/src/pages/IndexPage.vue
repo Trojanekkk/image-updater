@@ -6,7 +6,7 @@
       :key="container.id"
     >
       <q-card-section>
-        <span class="text-h6">Container {{ container.name }} </span>
+        <span class="text-h6">Container <b>{{ container.name }}</b> </span>
         <q-chip
           outline
           color="orange"
@@ -31,7 +31,7 @@
           <br />
           State:
           <span class="text-subtitle2">
-            Running (by {{ container.time }})
+            Running ({{ container.status }})
           </span>
           <br />
           Image: <span class="text-subtitle2">{{ container.image }}</span>
@@ -61,7 +61,6 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
 
 defineOptions({
   name: "IndexPage",
@@ -72,7 +71,7 @@ defineOptions({
           name: "xxxx",
           id: "ee4t5b7bdbijwe",
           state: "running",
-          time: "4 hours",
+          status: "4 hours",
           image: "docker.io/xxx/xxx:v1.23",
           imageId: "sha256:2r3u2990c9ruc4cru9uwa908j923m90809i3",
           updater: {
@@ -91,5 +90,8 @@ defineOptions({
       return container.imageId == container.updater.availableImageId;
     },
   },
+  mounted() {
+    this.$api.get("/containers").then((res) => { this.containers = res.data }).catch((e) => { console.log(e) })
+  }
 });
 </script>
