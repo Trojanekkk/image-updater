@@ -4,7 +4,7 @@
       @submit="addServer"
       style="width: 85%; margin: 2rem; display: flex; flex-direction: row; justify-content: space-between"
     >
-      <q-input standout="bg-primary text-white" style="flex: 1" v-model="server.name" label="Name" clearable clear-icon="close" />
+      <q-input standout="bg-primary text-white" style="flex: 1" v-model="server.name" label="Name*" clearable clear-icon="close" />
       <q-input standout="bg-primary text-white" style="flex: 1; margin-left: 1rem" v-model="server.ip" label="IP address or DNS" clearable clear-icon="close"  />
       <q-input standout="bg-primary text-white" style="flex: .5; margin-left: 1rem;" v-model="server.port" label="Port" clearable clear-icon="close"  />
       <q-btn label="Add server" type="submit" style="flex: .5; margin-left: 1rem;" color="primary" />
@@ -58,7 +58,7 @@ defineOptions({
       }, {
         name: 'ip',
         required: true,
-        label: 'IP Address',
+        label: 'IP Address or DNS',
         align: 'center',
         field: 'ip',
         sortable: true,

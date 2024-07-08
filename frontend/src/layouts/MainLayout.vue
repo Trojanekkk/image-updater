@@ -65,7 +65,7 @@ defineOptions({
 const nav = [
   {
     title: "Containers",
-    caption: "Manage containers",
+    caption: "Managed containers",
     icon: "view_in_ar",
     path: "/",
   },
