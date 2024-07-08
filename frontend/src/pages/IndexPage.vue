@@ -12,18 +12,30 @@
           color="orange"
           icon="error_outline"
           style="float: right"
+          v-if="isUpdateAvailable(container)"
         >
-          {{ container.updater.availableImage }} ({{
-            container.updater.availableImageId
+          {{ container.updaterConfig.availableImage }} ({{
+            container.updaterConfig.availableImageId
           }})
         </q-chip>
 
         <q-chip
-          color="green"
-          text-color="white"
-          style="margin-right: 1rem; float: right"
+          outline
+          color="primary"
+          icon="storage"
+          style="float: right"
         >
-          <q-avatar icon="check_circle_outline" />Running
+          {{ container.server }}
+        </q-chip>
+
+        <q-chip
+          outline
+          color="green"
+          icon="check_circle_outline"
+          style="margin-right: 1rem; float: right"
+          v-if="container.state === 'running'"
+        >
+          {{ container.state }}
         </q-chip>
 
         <p>
@@ -31,7 +43,7 @@
           <br />
           State:
           <span class="text-subtitle2">
-            Running ({{ container.status }})
+            {{ container.state }} ({{ container.status }})
           </span>
           <br />
           Image: <span class="text-subtitle2">{{ container.image }}</span>
@@ -45,14 +57,14 @@
         <q-btn flat><q-icon name="upgrade"></q-icon> Upgrade now</q-btn>
         <q-btn
           flat
-          v-if="container.updater.auto"
-          @click="container.updater.auto = !container.updaterConfig.auto"
+          v-if="!container.updaterConfig.auto"
+          @click="container.updaterConfig.auto = !container.updaterConfig.auto"
           ><q-icon name="update"></q-icon> Enable auto upgrade</q-btn
         >
         <q-btn
           flat
-          v-if="!container.updater.auto"
-          @click="container.updater.auto = !container.updaterConfig.auto"
+          v-if="container.updaterConfig.auto"
+          @click="container.updaterConfig.auto = !container.updaterConfig.auto"
           ><q-icon name="update_disabled"></q-icon> Disable auto upgrade</q-btn
         >
       </q-card-actions>
@@ -69,12 +81,13 @@ defineOptions({
       containers: [
         {
           name: "xxxx",
+          server: 'localhost',
           id: "ee4t5b7bdbijwe",
           state: "running",
           status: "4 hours",
           image: "docker.io/xxx/xxx:v1.23",
           imageId: "sha256:2r3u2990c9ruc4cru9uwa908j923m90809i3",
-          updater: {
+          updaterConfig: {
             auto: true,
             rule: "",
             availableImage: 1.24,
@@ -87,11 +100,15 @@ defineOptions({
   },
   methods: {
     isUpdateAvailable: (container) => {
-      return container.imageId == container.updater.availableImageId;
+      if (!container.updaterConfig.availableImageId) return false
+      console.log("hi")
+      return container.imageId == container.updaterConfig.availableImageId;
     },
   },
   mounted() {
-    this.$api.get("/containers").then((res) => { this.containers = res.data }).catch((e) => { console.log(e) })
+    this.$api.get("/containers").then((res) => { 
+      this.containers = res.data
+    }).catch((e) => { console.log(e) })
   }
-});
+})
 </script>

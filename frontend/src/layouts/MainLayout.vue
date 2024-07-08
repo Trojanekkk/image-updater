@@ -13,7 +13,7 @@
 
         <q-toolbar-title> Container image updater </q-toolbar-title>
 
-        <q-btn outline flat rounded><q-avatar icon="refresh" /> Refresh</q-btn>
+        <q-btn outline flat rounded @click="manualRefresh"><q-avatar icon="refresh" /> Refresh</q-btn>
       </q-toolbar>
     </q-header>
 
@@ -26,6 +26,7 @@
           v-for="item in nav"
           :key="item"
           :v-bind="nav"
+          active-class="bg-red"
         >
           <q-item clickable>
             <q-item-section avatar>
@@ -49,11 +50,17 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref } from "vue"
+import axios from "axios"
 
 defineOptions({
   name: "MainLayout",
-});
+  methods: {
+    manualRefresh: () => {
+      axios.get("/api/v1/containers/refresh").catch((e) => console.log(e))
+    },
+  }
+})
 
 const nav = [
   {
@@ -72,7 +79,7 @@ const nav = [
     title: "Registries",
     caption: "Registry settings",
     icon: "anchor",
-    path: "/registires",
+    path: "/registries",
   },
   {
     title: "Servers",
@@ -88,7 +95,7 @@ const nav = [
   },
 ];
 
-const leftDrawerOpen = ref(false);
+const leftDrawerOpen = ref(true)
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;

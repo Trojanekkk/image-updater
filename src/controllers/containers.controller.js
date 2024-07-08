@@ -1,20 +1,5 @@
 const dbPromise = require('../middleware/loki.js')
-
-
-// const getContainers = async (req, res) => { 
-//     const response = await axios.get('http://192.168.1.27:2375/containers/json')
-//     const containers = response.data.map(container => {
-//         return {
-//             name: container.Names[0].split('/')[1],
-//             id: container.Id,
-//             status: container.Status,
-//             state: container.State,
-//             image: container.Image,
-//             imageId: container.ImageID
-//         }
-//     });
-//     res.send(JSON.stringify(containers))
-// } 
+const { updateState } = require('../middleware/updateState.js')
 
 const getContainers = async (req, res) => {
     const db = await dbPromise
@@ -24,6 +9,12 @@ const getContainers = async (req, res) => {
     res.send(JSON.stringify(containers))
 }
 
+const manualRefresh = async (req, res) => {
+    containers = await updateState()
+    res.send()
+}
+
 module.exports = {
-    getContainers
+    getContainers,
+    manualRefresh
 }
