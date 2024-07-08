@@ -4,7 +4,6 @@ const getServers = async (req, res) => {
     const db = await dbPromise
     const serversCollection = db.getCollection('servers')
     const servers = serversCollection.find()
-    console.log(servers)
 
     res.send(servers)
 }
@@ -17,6 +16,14 @@ const addServer = async (req, res) => {
 
     if (!name) {
         return res.status(400).send({ "error": "Name must be specified" })
+    }
+
+    if (serversCollection.findOne({ name })) {
+        return res.status(400).send({ "error": "Server with that name already exists" })
+    }
+
+    if (serversCollection.findOne({ ip, port })) {
+        return res.status(400).send({ "error": "Server with that IP and port already exists" })
     }
 
     const server = {
