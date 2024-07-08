@@ -6,5 +6,6 @@ const router = Router()
 
 router.get("/servers", containers.getServers)
 router.post("/servers/add", containers.addServer)
+router.post("/servers/remove", containers.removeServer)
 
 module.exports = router

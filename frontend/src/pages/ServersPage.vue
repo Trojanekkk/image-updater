@@ -16,7 +16,30 @@
       row-key="name"
       no-data-label="Didn't find any servers. Add one with the form above!"
       style="width: 85%; margin: 2rem"
-    />
+    >
+      <template v-slot:body-cell-enabled="props">
+        <q-td :props="props">
+          <div>
+            <q-toggle v-model="props.row.enabled" color="primary" />
+          </div>
+        </q-td>
+      </template>
+
+      <template v-slot:body-cell-remove="props">
+        <q-td :props="props">
+          <div>
+            <q-btn
+              @click="removeServer(props.row.name)"
+              color="negative"
+              icon="delete_outline"
+              round
+              dense
+              flat
+            />
+          </div>
+        </q-td>
+      </template>
+    </q-table>
   </q-page>
 </template>
 
@@ -36,23 +59,27 @@ defineOptions({
         name: 'ip',
         required: true,
         label: 'IP Address',
-        align: 'left',
+        align: 'center',
         field: 'ip',
         sortable: true,
       }, {
         name: 'port',
         required: true,
         label: 'Port',
-        align: 'left',
+        align: 'center',
         field: 'port',
         sortable: true,
       }, {
         name: 'enabled',
         required: true,
         label: 'Enabled',
-        align: 'left',
+        align: 'center',
         field: 'enabled',
         sortable: true,
+      }, {
+        name: 'remove',
+        label: 'Remove',
+        align: 'right',
       }],
       servers: [],
       server: {
@@ -77,6 +104,14 @@ defineOptions({
       }).catch((e) => { 
         console.log(e)
         this.$q.notify({ type: 'negative', message: 'Failed to retrive servers list' })
+      })
+    },
+    removeServer: function (name) {
+      this.$api.post("/servers/remove", { name }).then((res) => {
+        this.getServers()
+      }).catch((e) => { 
+        console.log(e)
+        this.$q.notify({ type: 'negative', message: 'Failed to remove the server' })
       })
     }
   },

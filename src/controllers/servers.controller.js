@@ -38,7 +38,22 @@ const addServer = async (req, res) => {
     res.send(JSON.stringify(server))
 }
 
+const removeServer = async (req, res) => {
+    const db = await dbPromise
+    const serversCollection = db.getCollection('servers')
+    const { name } = req.body
+
+    if (!name) {
+        return res.status(400).send({ "error": "Name must be specified" })
+    }
+
+    serversCollection.findAndRemove({ name })
+
+    res.send({ name })
+}
+
 module.exports = {
     getServers,
-    addServer
+    addServer,
+    removeServer,
 }
